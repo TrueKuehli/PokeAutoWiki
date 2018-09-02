@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Urlaubsfotos und kleinere Web-Projekte">
+    <meta name="author" content="Timon Scholz">
+    <meta name="theme-color" content="#b71c1c">
+    <title>Pokémon Auto Wiki</title>
+    <link rel="icon" href="ressources/Logo192.png">
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="manifest" href="manifest.webmanifest">
+  </head>
+  <body>
+    <div class="backdrop">
+      <div class="header-bar">
+        <div class="menu-icon" id="show-menu"></div>
+        <h1 class="header">Pokémon Auto Wiki</h1>
+      </div>
+      <div class="menu-actions hidden" id="menu">
+        <a class="menu-option" id="analyze-tab">Analyze ROM</a>
+        <a class="menu-option" id="wiki-tab">Show Wiki</a>
+        <a class="menu-option" id="github-tab">View on GitHub</a>
+        <a class="menu-option" id="about-tab">About</a>
+      </div>
+    </div>
+    <div class="container" id="front-layer">
+      <div class="options" id="game-select">
+        <h3>Select original game</h3>
+        <div class="multi-select">
+          <a class="multi-item">Red / Blue</a>
+          <a class="multi-item">Yellow</a>
+          <a class="multi-item">Gold / Silver</a>
+        </div>
+      </div>
+      <div class="options" id="rom-upload">
+        <h3 id="upload-label">Upload ROM-File:</h3>
+        <input type="file" name="rom" accept=".gb,.gbc,.gba" aria-labelledby="upload-label">
+      </div>
+      <div class="options" id="submit">
+        <button class="submit-btn">Create Wiki</button>
+      </div>
+
+      <div class="copyright-container">
+        <span>© 2018 Timon Scholz</span>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

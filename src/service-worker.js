@@ -18,7 +18,7 @@ function precache() {
       './index.js',
       './manifest.webmanifest',
       './styles/index.css',
-      './ressources/'
+      './ressources/',
     ]);
   });
 }

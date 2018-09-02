@@ -1,0 +1,19 @@
+{
+  "files.exclude": {
+    "__error": true,
+    ".vscode": true,
+    ".gitattributes": true,
+    ".gitignore": true,
+    "node_modules": true,
+    ".eslintignore": true,
+    ".eslintrc": true
+  },
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "compressed",
+      "extensionName": ".css",
+      "savePath": "/dist"
+    }
+  ],
+  "liveServer.settings.root": "/dist/"
+}

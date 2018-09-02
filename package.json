@@ -2,9 +2,10 @@
   "name": "pokeautowiki",
   "version": "1.0.0",
   "description": "Automatically create a wiki from a (hacked) Pokemon ROM file",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "author": "Timon Scholz",
   "license": "MIT",

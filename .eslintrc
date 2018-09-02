@@ -1,9 +1,11 @@
 {
   "extends": "google",
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "rules": {
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "require-jsdoc": "off"
   }
 }

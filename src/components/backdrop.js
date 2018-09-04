@@ -23,10 +23,10 @@ export default class Backdrop {
       }
 
       // Set open state for menu button
-      if (this.backdropMenu.classList.contains('open')) {
-        this.backdropMenu.classList.remove('open');
+      if (this.menuButton.classList.contains('open')) {
+        this.menuButton.classList.remove('open');
       } else {
-        this.backdropMenu.classList.add('open');
+        this.menuButton.classList.add('open');
       }
     });
   }

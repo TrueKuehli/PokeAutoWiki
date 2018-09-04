@@ -11,6 +11,7 @@
     <link rel="icon" href="ressources/Logo192.png">
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="manifest.webmanifest">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
   </head>
   <body>
     <div class="backdrop">
@@ -19,7 +20,7 @@
         <h1 class="header">Pokémon Auto Wiki</h1>
       </div>
       <div class="menu-actions hidden" id="menu">
-        <a class="menu-option" id="analyze-tab">Analyze ROM</a>
+        <a class="menu-option active" id="analyze-tab">Analyze ROM</a>
         <a class="menu-option" id="wiki-tab">Show Wiki</a>
         <a class="menu-option" id="github-tab">View on GitHub</a>
         <a class="menu-option" id="about-tab">About</a>
@@ -29,14 +30,14 @@
       <div class="options" id="game-select">
         <h3>Select original game</h3>
         <div class="multi-select">
-          <a class="multi-item">Red / Blue</a>
-          <a class="multi-item">Yellow</a>
-          <a class="multi-item">Gold / Silver</a>
+          <a class="multi-item selected" id="redBlue">Red / Blue</a>
+          <a class="multi-item" id="yellow">Yellow</a>
+          <a class="multi-item" id="goldSilver">Gold / Silver</a>
         </div>
       </div>
-      <div class="options" id="rom-upload">
-        <h3 id="upload-label">Upload ROM-File:</h3>
-        <input type="file" name="rom" accept=".gb,.gbc,.gba" aria-labelledby="upload-label" id="rom-select">
+      <div class="options file-options" id="rom-upload">
+        <h3 id="upload-label">Upload ROM-File</h3>
+        <input type="file" name="rom" accept=".gb,.gbc,.gba" aria-labelledby="upload-label" class="file-input" id="rom-select">
       </div>
       <div class="options" id="submit">
         <button class="submit-btn" id="submit-btn">Create Wiki</button>

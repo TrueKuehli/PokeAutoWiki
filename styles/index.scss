@@ -4,7 +4,7 @@ html,body {
   height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
   overflow: hidden;
   background-color: $primary;
   color: $primary-text;
@@ -86,8 +86,13 @@ body {
       padding: 1rem;
       border: none;
       border-radius: 8px;
+      cursor: pointer;
 
       &:hover {
+        background-color: $secondary-half-dark;
+      }
+
+      &.active {
         background-color: $secondary-dark;
       }
     }
@@ -119,23 +124,25 @@ body {
 
     .multi-select {
       font-size: 0;
+      border: none;
       .multi-item {
         display: inline-block;
-        background-color: $secondary;
-        color: $secondary-text;
+        background-color: $primary-light;
+        color: $primary-text;
         margin: 0;
         font-size: 1rem;
         padding: 8px;
-        border: none;
+        border-style: solid;
+        border-left-style: none;
+        border-width: 1px;
         transition: background-color 100ms ease;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        cursor: pointer;
 
         &:first-child {
           border-top-left-radius: 4px;
           border-bottom-left-radius: 4px;
-        }
-
-        &:hover {
-          background-color: $secondary-dark;
+          border-left-style: solid;
         }
 
         &:last-child {
@@ -143,24 +150,69 @@ body {
           border-top-right-radius: 4px;
           border-bottom-right-radius: 4px;
         }
+
+        &:hover {
+          background-color: $primary;
+        }
+
+        &.selected {
+          background-color: $primary-dark;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
       }
     }
   }
 
-  .submit-btn {
-    font-size: 1rem;
+  .file-options {
+    font-family: 'Roboto Condensed', sans-serif;
+    position: relative;
+    border-style: dashed;
+    border-radius: 4px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    background-image: url('/ressources/upload.png');
+    background-repeat: no-repeat;
+    background-position: left;
+    background-position-x: 0.5rem;
 
+    .file-input {
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+
+  .submit-btn {
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 0;
+    font-size: 1rem;
+    font-family: 'Roboto Condensed', sans-serif;
     display: inline-block;
     background-color: $secondary;
     color: $secondary-text;
-    margin: 0;
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 100ms ease;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    cursor: pointer;
+
+    background-position: center;
+    transition: background 800ms, box-shadow 100ms;
 
     &:hover {
-      background-color: $secondary-dark;
+      background: $secondary-dark radial-gradient(circle, transparent 1%, $secondary-dark 1%) center/15000%;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+
+    &:active {
+      background-color: $secondary-light;
+      background-size: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      transition: background 0s, box-shadow 0s;
     }
   }
 

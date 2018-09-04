@@ -1,7 +1,8 @@
 export default class FileImporter {
-  constructor(fileInput, submitBtn) {
+  constructor(fileInput, submitBtn, btnLabel) {
     this.fileInput = document.getElementById(fileInput);
     this.submitBtn = document.getElementById(submitBtn);
+    this.btnLabel = document.getElementById(btnLabel);
   }
 
   extractData(callback = function() {}) {
@@ -31,6 +32,29 @@ export default class FileImporter {
   }
 
   register() {
+    // If a file is already in the upload container, initialize text
+    let fileList = this.fileInput.files;
+    let name;
+    if (fileList.length > 0) {
+      name = fileList[0].name;
+    } else {
+      name = 'Upload ROM-File';
+    }
+    this.btnLabel.innerText = name;
+
+    // Registering file upload event, update file name when uploading
+    this.fileInput.addEventListener('change', () => {
+      let fileList = this.fileInput.files;
+      let name;
+      if (fileList.length > 0) {
+        name = fileList[0].name;
+      } else {
+        name = 'Upload ROM-File';
+      }
+      this.btnLabel.innerText = name;
+    });
+
+    // Registering submit event
     this.submitBtn.addEventListener('click', () => {
       this.extractData();
     });

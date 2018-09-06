@@ -5,8 +5,11 @@ export default class FileImporter {
     this.btnLabel = document.getElementById(btnLabel);
   }
 
-  extractData(callback = function() {}) {
+  extractData(callback) {
+    // TODO: Disable UI
+
     let fileList = this.fileInput.files;
+
     if (fileList.length < 1) {
       // TODO: Show error message
       console.log('No file received.');
@@ -31,7 +34,7 @@ export default class FileImporter {
     return fileReader;
   }
 
-  register() {
+  register(callback = function() {}) {
     // If a file is already in the upload container, initialize text
     let fileList = this.fileInput.files;
     let name;
@@ -56,7 +59,7 @@ export default class FileImporter {
 
     // Registering submit event
     this.submitBtn.addEventListener('click', () => {
-      this.extractData();
+      this.extractData(callback);
     });
   }
 }

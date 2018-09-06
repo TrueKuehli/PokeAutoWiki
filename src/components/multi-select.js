@@ -15,4 +15,8 @@ export default class MultiSelect {
       });
     }
   }
+
+  getSelection() {
+    return this.selected;
+  }
 }

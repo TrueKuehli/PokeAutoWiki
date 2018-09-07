@@ -1,32 +1,16 @@
-export default class DataReaderG1 {
-  constructor(data, decoder) {
+import pointer from './pointer.js';
+
+export default class MapReader {
+  constructor(data) {
     this.rawData = data;
-    this.decoder = decoder;
-    this.processedData = {};
   }
 
-  extract() {
-    this.getRomName();
-    this.getMapHeaders(this.getMapHeaderAddresses());
-    this.getMapData();
-    this.getMapObjectData();
+  extractMaps() {
+    let map = this.getMapHeaders(this.getMapHeaderAddresses());
+    this.getMapData(map);
+    this.getMapObjectData(map);
 
-    this.debug();
-  }
-
-  debug() {
-    console.log(this.processedData);
-  }
-
-  getPointer(lower, upper) {
-    return parseInt(upper.toString(16) + lower.toString(16), 16) % 0x4000;
-  }
-
-  getRomName() {
-    // Convert ROM Name from ASCII Codes, and remove NULL-characters
-    this.processedData.romName =
-        String.fromCharCode(...this.rawData.slice(308, 324))
-        .replace(/\0/g, '');
+    return map;
   }
 
   getMapHeaderAddresses() {
@@ -43,7 +27,7 @@ export default class DataReaderG1 {
     // modulo 4000 to stay in correct bank)
     for (let i = 0; i < headerOffsetsRaw.length; i+=2) {
       headerOffsets.push(
-          this.getPointer(headerOffsetsRaw[i], headerOffsetsRaw[i+1]));
+          pointer.getPointer(headerOffsetsRaw[i], headerOffsetsRaw[i+1]));
     }
 
     // Add offset to bank starting index
@@ -55,7 +39,7 @@ export default class DataReaderG1 {
   }
 
   getMapHeaders(headerAddresses) {
-    this.processedData.map = [];
+    let maps = [];
 
     for (let address of headerAddresses) {
       let map = {
@@ -66,11 +50,11 @@ export default class DataReaderG1 {
         'connection': null,
         'connections': {},
         'pointers': {
-          'mapData': this.getPointer(this.rawData[address + 3],
+          'mapData': pointer.getPointer(this.rawData[address + 3],
               this.rawData[address + 4]),
-          'textPointers': this.getPointer(this.rawData[address + 5],
+          'textPointers': pointer.getPointer(this.rawData[address + 5],
               this.rawData[address + 6]),
-          'script': this.getPointer(this.rawData[address + 7],
+          'script': pointer.getPointer(this.rawData[address + 7],
               this.rawData[address + 8]),
         },
       };
@@ -93,9 +77,11 @@ export default class DataReaderG1 {
           map.connections[direction] = {
             'mapId': this.rawData[address + offset++],
             'pointers': {
-              'connectBlock': this.getPointer(this.rawData[address + offset++],
+              'connectBlock': pointer.getPointer(
+                  this.rawData[address + offset++],
                   this.rawData[address + offset++]),
-              'currentBlock': this.getPointer(this.rawData[address + offset++],
+              'currentBlock': pointer.getPointer(
+                  this.rawData[address + offset++],
                   this.rawData[address + offset++]),
             },
             'biggness': this.rawData[address + offset++],
@@ -109,15 +95,17 @@ export default class DataReaderG1 {
       }
 
       map.pointers['objectData'] =
-          this.getPointer(this.rawData[address + offset++],
+          pointer.getPointer(this.rawData[address + offset++],
           this.rawData[address + offset++]);
 
-      this.processedData.map.push(map);
+      maps.push(map);
     }
+
+    return maps;
   }
 
-  getMapData() {
-    for (let map of this.processedData.map) {
+  getMapData(maps) {
+    for (let map of maps) {
       const dataPointer = map.pointers.mapData;
       const fullPointer = map.memoryBank * 0x4000 + dataPointer;
       const width = map.width;
@@ -137,8 +125,8 @@ export default class DataReaderG1 {
     }
   }
 
-  getMapObjectData() {
-    for (let map of this.processedData.map) {
+  getMapObjectData(maps) {
+    for (let map of maps) {
       const objectPointer = map.pointers.objectData;
       const fullPointer = map.memoryBank * 0x4000 + objectPointer;
 
@@ -208,7 +196,8 @@ export default class DataReaderG1 {
       objectData['warpIns'] = [];
       for (let i = 0; i < objectData.numWarps; i++) {
         objectData.warpIns.push({
-          'windowPointer': this.getPointer(this.rawData[fullPointer + offset++],
+          'windowPointer': pointer.getPointer(
+              this.rawData[fullPointer + offset++],
               this.rawData[fullPointer + offset++]),
           'yPos': this.rawData[fullPointer + offset++],
           'xPos': this.rawData[fullPointer + offset++],

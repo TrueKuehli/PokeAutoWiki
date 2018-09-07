@@ -1,34 +1,31 @@
-import Backdrop from './components/backdrop.js';
-import FileImporter from './components/file-importer.js';
-import MultiSelect from './components/multi-select.js';
-import Decoder from './components/decoder.js';
-import DataReaderG1 from './components/dataReader_g1.js';
-import BannerController from './components/notification-banner.js';
-import UIManager from './components/ui-manager.js';
+import Backdrop from './components/ui/backdrop.js';
+import FileImporter from './components/ui/file-importer.js';
+import MultiSelect from './components/ui/multi-select.js';
+import Decoder from './components/dataReaders/decoder.js';
+import DataReaderG1 from './components/dataReaders/gen1/dataReader.js';
+import BannerController from './components/ui/notification-banner.js';
+import UIManager from './components/ui/ui-manager.js';
 
-// Initializing UI Elements
+// Initializing UI Elements and UI Manager
 let backdrop = new Backdrop('menu', 'front-layer', 'show-menu');
-backdrop.register();
-
 let multiSelect = new MultiSelect('multi-item');
-multiSelect.register();
-
 let notifications = new BannerController('notifications',
     'banner-info', 'dismiss-banner');
-notifications.register();
-
-// Initialize UI Manager (to disable UI Elements during an operation)
-window.uiManager = new UIManager('multi-item', 'file-input', 'file-options',
+let uiManager = new UIManager('multi-item', 'file-input', 'file-options',
     'submit-btn', 'upload-text');
 
-// Loading decoder data
-let decoder = new Decoder('./ressources/encoding.json', 'redBlue');
+backdrop.register();
+multiSelect.register();
+notifications.register();
 
-// Setting up file importer
+
+// Setting up file processing pipeline
+let decoder = new Decoder('./ressources/encoding.json', 'redBlue');
 let fileImporter = new FileImporter('rom-select', 'submit-btn',
     'upload-label', notifications, uiManager);
 
-// Registering submit pipeline
+
+// Registering processing start
 fileImporter.register((data) => {
   let game = multiSelect.getSelection();
   let dataReader;
@@ -48,6 +45,7 @@ fileImporter.register((data) => {
   uiManager.enable();
 });
 
+// Registering service worker. Disabled during dev, due to frequent file changes
 // navigator.serviceWorker.register('serviceWorker.js', {
 //   scope: './'
 // })

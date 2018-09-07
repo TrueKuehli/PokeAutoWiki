@@ -181,7 +181,7 @@ export default class MapReader {
             npcData['rosterId'] = level;
           } else {
             npcData['type'] = 'trainer';
-            npcData['trainerClass'] = id;
+            npcData['trainerClass'] = id - 200;
             npcData['rosterId'] = level;
           }
         } else if (npcData.typeFlag & (1 << 7)) {

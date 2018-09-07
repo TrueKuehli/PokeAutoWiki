@@ -29,4 +29,14 @@ export default class Decoder {
     }
     return result;
   }
+
+  registerControlChars(charList) {
+    let charTable = this.data[this.game]['text-encoding'];
+    for (let char of charList) {
+      if (charTable.includes(char.original)) {
+        const index = charTable.indexOf(char.original);
+        charTable[index] = this.decodeText(char.new);
+      }
+    }
+  }
 }

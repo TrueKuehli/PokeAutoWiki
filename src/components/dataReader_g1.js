@@ -8,7 +8,7 @@ export default class DataReaderG1 {
   extract() {
     this.getRomName();
     this.getMapHeaders(this.getMapHeaderAddresses());
-    // this.getMapData();
+    this.getMapData();
     // this.getMapObjectData();
 
     this.debug();
@@ -122,8 +122,18 @@ export default class DataReaderG1 {
       const fullPointer = map.memoryBank * 0x4000 + dataPointer;
       const width = map.width;
       const height = map.height;
-      // WIDTH x HEIGHT TILES
-      // TODO: READ INTO 2D ARRAY
+
+      let tiles = [];
+
+      for (let h = 0; h < height; h++) {
+        tiles[h] = [];
+        for (let w = 0; w < width; w++) {
+          const offset = h * width + w;
+          tiles[h][w] = this.rawData[fullPointer + offset];
+        }
+      }
+
+      map.tiles = tiles;
     }
   }
 }

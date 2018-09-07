@@ -171,11 +171,7 @@ export default class MapReader {
           'typeFlag': this.rawData[fullPointer + offset] & 0b11000000,
           'textId': this.rawData[fullPointer + offset++] & 0b00111111,
         };
-        if (npcData.typeFlag & (1 << 7)) {
-          // NPC is an item
-          npcData['type'] = 'item';
-          npcData['itemId'] = this.rawData[fullPointer + offset++];
-        } else if (npcData.typeFlag & (1 << 6)) {
+        if (npcData.typeFlag & (1 << 6)) {
           // NPC is a trainer / static Pokémon
           let id = this.rawData[fullPointer + offset++];
           let level = this.rawData[fullPointer + offset++];
@@ -188,6 +184,10 @@ export default class MapReader {
             npcData['trainerClass'] = id;
             npcData['rosterId'] = level;
           }
+        } else if (npcData.typeFlag & (1 << 7)) {
+          // NPC is an item
+          npcData['type'] = 'item';
+          npcData['itemId'] = this.rawData[fullPointer + offset++];
         } else {
           // NPC is a regular person
           npcData['type'] = 'person';

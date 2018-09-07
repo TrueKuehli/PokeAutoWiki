@@ -1,10 +1,10 @@
 import Backdrop from './components/ui/backdrop.js';
 import FileImporter from './components/ui/file-importer.js';
 import MultiSelect from './components/ui/multi-select.js';
-import Decoder from './components/dataReaders/decoder.js';
 import DataReaderG1 from './components/dataReaders/gen1/dataReader.js';
 import BannerController from './components/ui/notification-banner.js';
 import UIManager from './components/ui/ui-manager.js';
+import Decoder from './components/dataReaders/decoder.js';
 
 // Initializing UI Elements and UI Manager
 let backdrop = new Backdrop('menu', 'front-layer', 'show-menu');
@@ -20,7 +20,8 @@ notifications.register();
 
 
 // Setting up file processing pipeline
-let decoder = new Decoder('./ressources/encoding.json', 'redBlue');
+let decoder = new Decoder('./ressources/encoding.json', 'redBlue',
+    uiManager, notifications);
 let fileImporter = new FileImporter('rom-select', 'submit-btn',
     'upload-label', notifications, uiManager);
 

@@ -1,11 +1,14 @@
 export default class Decoder {
-  constructor(jsonDecoder, defaultGame) {
+  constructor(jsonDecoder, defaultGame, uiMan, notificationMan) {
+    uiMan.disable();
+    notificationMan.show('Initializing Decoder...');
     this.dataLoaded = false;
     let dataRequest = new XMLHttpRequest();
     dataRequest.addEventListener('load', (e) => {
       this.data = e.target.response;
       this.dataLoaded = true;
-      console.log('Data for decoder loaded.');
+      uiMan.enable();
+      notificationMan.hide();
     });
     dataRequest.open('GET', jsonDecoder);
     dataRequest.responseType = 'json';
@@ -18,20 +21,12 @@ export default class Decoder {
     this.game = game;
   }
 
-  decodeText(bytes, tries=0) {
-    if (!this.dataLoaded) {
-      let timeOut = tries * tries * 20;
-      console.log('Decoder not ready, retrying in:',
-          timeOut.toString() + 'ms');
-      window.setTimeout(this.decodeText.bind(this, bytes, tries+1), timeOut);
-      return -1;
-    }
-
+  decodeText(bytes) {
     let charTable = this.data[this.game]['text-encoding'];
     let result = '';
     for (let byte of bytes) {
       result += charTable[byte];
     }
-    return result; // TODO: Replace with callback function, b/c of retries
+    return result;
   }
 }

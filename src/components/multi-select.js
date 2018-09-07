@@ -7,6 +7,7 @@ export default class MultiSelect {
     for (let item of this.multiSelects) {
       if (!this.selected) this.selected = item.id;
       item.addEventListener('click', (e) => {
+        if (e.target.disabled) return;
         for (let item of this.multiSelects) {
           item.classList.remove('selected');
         }

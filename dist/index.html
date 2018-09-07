@@ -27,6 +27,13 @@
       </div>
     </div>
     <div class="container" id="front-layer">
+      <div class="banner hidden" id="notifications" style="display: none;">
+        <p class="banner-text" id="banner-info">Lorem ipsum.</p>
+        <div class="btn-container">
+          <button class="banner-button" id="dismiss-banner">Dismiss</button>
+        </div>
+        <hr>
+      </div>
       <div class="options" id="game-select">
         <h3>Select original game</h3>
         <div class="multi-select">
@@ -36,7 +43,7 @@
         </div>
       </div>
       <div class="options file-options" id="rom-upload">
-        <h3 id="upload-label">Upload ROM-File</h3>
+        <h3 class="upload-text" id="upload-label">Upload ROM-File</h3>
         <input type="file" name="rom" accept=".gb,.gbc,.gba" aria-labelledby="upload-label" class="file-input" id="rom-select">
       </div>
       <div class="options" id="submit">

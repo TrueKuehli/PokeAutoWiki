@@ -1,25 +1,27 @@
 export default class FileImporter {
-  constructor(fileInput, submitBtn, btnLabel) {
+  constructor(fileInput, submitBtn, btnLabel, notificationsHandler, uiMan) {
     this.fileInput = document.getElementById(fileInput);
     this.submitBtn = document.getElementById(submitBtn);
     this.btnLabel = document.getElementById(btnLabel);
+    this.notifications = notificationsHandler;
+    this.uiManager = uiMan;
   }
 
   extractData(callback) {
-    // TODO: Disable UI
+    this.uiManager.disable();
 
     let fileList = this.fileInput.files;
 
     if (fileList.length < 1) {
-      // TODO: Show error message
-      console.log('No file received.');
+      this.notifications.show('No file received.');
+      this.uiManager.enable();
       return 1;
     }
 
     let file = fileList[0];
     if (file.size > 104857600) {
-      // TODO: Show error message
-      console.log('File size exceeds 100MB');
+      this.notifications.show('File size cannot exceed 100MB.');
+      this.uiManager.enable();
       return 2;
     }
 
@@ -30,6 +32,8 @@ export default class FileImporter {
       let data = new Uint8Array(fileReader.result);
       callback(data);
     });
+
+    this.notifications.hide();
 
     return fileReader;
   }

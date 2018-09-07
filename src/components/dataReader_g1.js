@@ -9,7 +9,7 @@ export default class DataReaderG1 {
     this.getRomName();
     this.getMapHeaders(this.getMapHeaderAddresses());
     this.getMapData();
-    // this.getMapObjectData();
+    this.getMapObjectData();
 
     this.debug();
   }
@@ -134,6 +134,89 @@ export default class DataReaderG1 {
       }
 
       map.tiles = tiles;
+    }
+  }
+
+  getMapObjectData() {
+    for (let map of this.processedData.map) {
+      const objectPointer = map.pointers.objectData;
+      const fullPointer = map.memoryBank * 0x4000 + objectPointer;
+
+      let offset = 0;
+
+      let objectData = {};
+      objectData['borderBlock'] = this.rawData[fullPointer + offset++];
+
+      // Get warp data
+      objectData['numWarps'] = this.rawData[fullPointer + offset++];
+      objectData['warps'] = [];
+      for (let i = 0; i < objectData.numWarps; i++) {
+        objectData.warps.push({
+          'xPos': this.rawData[fullPointer + offset++],
+          'yPos': this.rawData[fullPointer + offset++],
+          'warpInId': this.rawData[fullPointer + offset++],
+          'destMap': this.rawData[fullPointer + offset++],
+        });
+      }
+
+      // Get sign data
+      objectData['numSigns'] = this.rawData[fullPointer + offset++];
+      objectData['signs'] = [];
+      for (let i = 0; i < objectData.numSigns; i++) {
+        objectData.signs.push({
+          'xPos': this.rawData[fullPointer + offset++],
+          'yPos': this.rawData[fullPointer + offset++],
+          'textId': this.rawData[fullPointer + offset++],
+        });
+      }
+
+      // Get NPC data
+      objectData['numNPCs'] = this.rawData[fullPointer + offset++];
+      objectData['npcs'] = [];
+      for (let i = 0; i < objectData.numNPCs; i++) {
+        let npcData = {
+          'picId': this.rawData[fullPointer + offset++],
+          'xPos': this.rawData[fullPointer + offset++],
+          'yPos': this.rawData[fullPointer + offset++],
+          'mov1': this.rawData[fullPointer + offset++],
+          'mov2': this.rawData[fullPointer + offset++],
+          'textId': this.rawData[fullPointer + offset++],
+        };
+        if (npcData.textId & (1 << 7)) {
+          // NPC is an item
+          npcData['type'] = 'item';
+          npcData['itemId'] = this.rawData[fullPointer + offset++];
+        } else if (npcData.textId & (1 << 6)) {
+          // NPC is a trainer / static Pokémon
+          let id = this.rawData[fullPointer + offset++];
+          let level = this.rawData[fullPointer + offset++];
+          if (id < 200) {
+            npcData['type'] = 'pkmnStatic';
+            npcData['trainerClass'] = id;
+            npcData['rosterId'] = level;
+          } else {
+            npcData['type'] = 'trainer';
+            npcData['trainerClass'] = id;
+            npcData['rosterId'] = level;
+          }
+        }
+
+        objectData.npcs.push(npcData);
+      }
+
+      // Warp-in data
+      objectData['warpIns'] = [];
+      for (let i = 0; i < objectData.numWarps; i++) {
+        objectData.warpIns.push({
+          'windowPointer': this.getPointer(this.rawData[fullPointer + offset++],
+              this.rawData[fullPointer + offset++]),
+          'yPos': this.rawData[fullPointer + offset++],
+          'xPos': this.rawData[fullPointer + offset++],
+        });
+      }
+
+      // Save data
+      map.objectData = objectData;
     }
   }
 }

@@ -5,26 +5,28 @@ export default class MapReader {
     this.rawData = data;
   }
 
-  extractMaps() {
-    let map = this.getMapHeaders(this.getMapHeaderAddresses());
+  extractMaps(pointers) {
+    let map = this.getMapHeaders(this.getMapHeaderAddresses(
+        pointers.pointerPointers.map.headers));
     this.getMapData(map);
     this.getMapObjectData(map);
 
     return map;
   }
 
-  getMapHeaderAddresses() {
+  getMapHeaderAddresses(pointers) {
     // Get Memory Bank indexes
-    const banks = Array.from(this.rawData.slice(49725, 49973));
-    const bankAddresses = banks.map((val) => val * 16384);
+    const banks = Array.from(this.rawData.slice(pointers.banks.from,
+        pointers.banks.to));
+    const bankAddresses = banks.map((val) => val * 0x4000);
 
     // Get offset values
-    const headerOffsetsRaw = this.rawData.slice(430, 926);
+    const headerOffsetsRaw = this.rawData.slice(pointers.pointers.from,
+      pointers.pointers.to);
     let headerOffsets = [];
     let headerAddresses = [];
 
-    // Calculate offset (put bytes in correct order and
-    // modulo 4000 to stay in correct bank)
+    // Convert from little endian offsets
     for (let i = 0; i < headerOffsetsRaw.length; i+=2) {
       headerOffsets.push(
           pointer.getPointer(headerOffsetsRaw[i], headerOffsetsRaw[i+1]));

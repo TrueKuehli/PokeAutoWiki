@@ -1,4 +1,10 @@
 import MapReader from './mapReader.js';
+import PkmnReader from './pkmnReader.js';
+import GFXReader from './gfxReader.js';
+import ShopReader from './shopReader.js';
+import TextReader from './textReader.js';
+
+import defaultPointers from './_pointersDefault.js';
 
 export default class DataReaderG1 {
   constructor(data, decoder) {
@@ -6,14 +12,33 @@ export default class DataReaderG1 {
     this.decoder = decoder;
     this.processedData = {};
 
+    this.defPointers = defaultPointers;
+
     this.mapReader = new MapReader(data);
+    this.pkmnReader = new PkmnReader(data, decoder);
+    this.gfxReader = new GFXReader(data);
+    this.shopReader = new ShopReader(data);
+    this.textReader = new TextReader(data, decoder);
   }
 
-  extract() {
-    this.decoder.setGame('redBlue');
-    this.getRomName();
-    this.getControlText();
-    this.processedData['map'] = this.mapReader.extractMaps();
+  extract(game = 'redBlue', customPointers = null) {
+    // Set pointers
+    let usedPointers = {};
+    if (game == 'redBlue') usedPointers = this.defPointers['redBlue'];
+    else if (game == 'yellow') usedPointers = this.defPointers['yellow'];
+
+    // Add custom pointers if given as argument
+    if (customPointers != null) {
+      usedPointers = Object.assign(usedPointers, customPointers);
+    }
+
+    this.decoder.setGame(game);
+
+    this.getRomName(usedPointers.concretePointers.basic.romName);
+    this.getControlText(usedPointers.concretePointers.basic.ctrlText);
+
+    this.processedData['map'] =
+        this.mapReader.extractMaps(usedPointers);
 
     this.debug();
   }
@@ -22,15 +47,15 @@ export default class DataReaderG1 {
     console.log(this.processedData);
   }
 
-  getRomName() {
+  getRomName(pointer) {
     // Convert ROM Name from ASCII Codes, and remove NULL-characters
     this.processedData.romName =
-        String.fromCharCode(...this.rawData.slice(308, 324))
+        String.fromCharCode(...this.rawData.slice(pointer.from, pointer.to))
         .replace(/\0/g, '');
   }
 
-  getControlText() {
-    const controlStart = 0x1A55;
+  getControlText(pointer) {
+    const controlStart = pointer.from;
     let offset = 0;
     let charList = [];
     let original = [

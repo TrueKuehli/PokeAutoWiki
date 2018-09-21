@@ -1,14 +1,14 @@
 export default class Decoder {
   constructor(jsonDecoder, defaultGame, uiMan, notificationMan) {
     uiMan.disable();
-    notificationMan.show('Initializing Decoder...');
+    notificationMan.show('decoderInit', 'Initializing Decoder...');
     this.dataLoaded = false;
     let dataRequest = new XMLHttpRequest();
     dataRequest.addEventListener('load', (e) => {
       this.data = e.target.response;
       this.dataLoaded = true;
       uiMan.enable();
-      notificationMan.hide();
+      notificationMan.hide('decoderInit')
     });
     dataRequest.open('GET', jsonDecoder);
     dataRequest.responseType = 'json';

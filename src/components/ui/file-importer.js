@@ -13,14 +13,14 @@ export default class FileImporter {
     let fileList = this.fileInput.files;
 
     if (fileList.length < 1) {
-      this.notifications.show('No file received.');
+      this.notifications.show('noFile', 'No file received.');
       this.uiManager.enable();
       return 1;
     }
 
     let file = fileList[0];
     if (file.size > 104857600) {
-      this.notifications.show('File size cannot exceed 100MB.');
+      this.notifications.show('fileSize', 'File size cannot exceed 100MB.');
       this.uiManager.enable();
       return 2;
     }

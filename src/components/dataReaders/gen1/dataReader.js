@@ -39,6 +39,8 @@ export default class DataReaderG1 {
 
     this.processedData['map'] =
         this.mapReader.extractMaps(usedPointers);
+    this.processedData['pokemon'] =
+        this.pkmnReader.extractPkmnData(usedPointers);
 
     this.debug();
   }

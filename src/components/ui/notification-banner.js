@@ -59,7 +59,17 @@ export default class BannerController {
     this.current = name;
   }
 
-  hide() {
-    this.banner.classList.add('hidden');
+  showPersistence() {
+    let text = `Storage persistence is disabled, so in-browser storage of created Wikis might not work.\n` +
+        `Click <a href="#" onclick="
+          event.preventDefault();
+          navigator.storage.persist().then((persistent) => {
+            if (persistent) notificationManager.show('storageSuccess', 'Storage persistence successfully turned on.');
+            else notificationManager.show('storageFail', 'Storage persistence has been rejected.');
+          });
+        ">here</a> to enable storage persistence.`;
+    let bannerItem = {'name': 'persistence', text, 'html': true};
+    this.bannerMsgs.push(bannerItem);
+    this.update();
   }
 }

@@ -18,6 +18,9 @@ backdrop.register();
 multiSelect.register();
 notifications.register();
 
+// Register notificationManager in global scope
+window.notificationManager = notifications;
+
 
 // Setting up file processing pipeline
 let decoder = new Decoder('./ressources/encoding.json', 'redBlue',
@@ -27,6 +30,7 @@ let fileImporter = new FileImporter('rom-select', 'submit-btn',
 
 
 // Registering processing start
+// TODO: Lazy load module for selected generation game
 fileImporter.register((data) => {
   let game = multiSelect.getSelection();
   let dataReader;
@@ -50,3 +54,8 @@ fileImporter.register((data) => {
 // navigator.serviceWorker.register('serviceWorker.js', {
 //   scope: './'
 // })
+
+// Ask for data persistence, if disabled
+window.persisted = navigator.storage.persisted().then((bool) => {
+  if (!bool) notifications.showPersistence();
+});

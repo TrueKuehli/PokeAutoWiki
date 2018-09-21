@@ -1,8 +1,9 @@
 import MapReader from './mapReader.js';
 import PkmnReader from './pkmnReader.js';
-import GFXReader from './gfxReader.js';
+import GFXReader from './gfx/gfxReader.js';
 import ShopReader from './shopReader.js';
 import TextReader from './textReader.js';
+import ItemReader from './itemReader.js';
 
 import defaultPointers from './_pointersDefault.js';
 
@@ -18,6 +19,7 @@ export default class DataReaderG1 {
     this.pkmnReader = new PkmnReader(data, decoder);
     this.gfxReader = new GFXReader(data);
     this.shopReader = new ShopReader(data);
+    this.itemReader = new ItemReader(data);
     this.textReader = new TextReader(data, decoder);
   }
 
@@ -41,8 +43,16 @@ export default class DataReaderG1 {
         this.mapReader.extractMaps(usedPointers);
     this.processedData['pokemon'] =
         this.pkmnReader.extractPkmnData(usedPointers);
+    this.processedData['shops'] =
+        this.shopReader.extractShopData(usedPointers);
+    this.processedData['itemData'] =
+        this.itemReader.extractItemData(usedPointers);
+    this.processedData['text'] =
+        this.textReader.extractText(usedPointers);
     this.processedData['gfx'] =
         this.gfxReader.extractGraphics(this.processedData.pokemon.baseStats);
+
+    this.getTitleScreenPkmn(usedPointers.concretePointers.titleScreen);
 
     this.debug();
   }
@@ -85,5 +95,13 @@ export default class DataReaderG1 {
     }
 
     this.decoder.registerControlChars(charList);
+  }
+
+  getTitleScreenPkmn(pointers) {
+    this.processedData.titleScreen = {
+      'firstPokemon': this.rawData[pointers.firstPkmn],
+      'pokemonList': Array.from(this.rawData.slice(pointers.pkmnList.from,
+          pointers.pkmnList.to)),
+    };
   }
 }
